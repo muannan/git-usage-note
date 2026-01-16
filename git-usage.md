@@ -1,12 +1,12 @@
 # 概述
 
-在使用 git 前，要先明白几个概念：**工作空间**、**缓存区**、**本地仓库**和**远程仓库**。
+在使用 `git` 前，要先清除几个概念：`工作空间`、`缓存区`、`本地仓库`和`远程仓库`。
 
-其中 **远程仓库** 就是最终 github 端存储的仓库，在 github 网页端可以查看和下载里面的所有内容。
+其中 `远程仓库` 就是最终 github 端存储的仓库，在 github 网页端可以查看和下载里面的所有内容。
 
-而 **本地仓库** 是抽象的，它不如远程仓库那样轻易的查看的里面有什么，但可以在本地灵活的修改其中内容（例如，在本地可以轻易的添加一整个文件夹的内容，而在网页端无法做到）。
+而 `本地仓库` 是抽象的，它不如远程仓库那样轻易的查看的里面有什么，但可以在本地灵活的修改其中内容（例如，在本地可以轻易的添加一整个文件夹的内容，而在网页端无法做到）。
 
-**工作空间** 就是一个本地的文件夹，本地仓库就存在于该文件夹下的 .git 文件夹（隐藏的）中，在工作空间路径下的终端中，使用 `git add` 等指令，改动的内容会暂存在 **暂存区** 。
+`工作空间` 就是一个本地的文件夹，`本地仓库`就存在于该文件夹下的 .git 文件夹（隐藏的）中，在工作空间路径下的终端中，使用 `git add` 等指令，改动的内容会暂存在 `暂存区` 。
 
 确定好改动后，使用 `git commit` 指令将暂存区的内容提交至本地仓库。
 
@@ -14,26 +14,20 @@
 
 
 
+`git` 在 windows 上安装，直接在 git 官网下载 git for windows 按照步骤进行安装即可。
 
-
-
-
-# 安装 git
-
-搜索 git 官网下载 git for windows 进行安装即可。
-
+在 ubuntu 上已经被默认安装。
 
 
 
 
 
+# 首次使用，设置全局的 git 用户信息
 
-# 设置全局的 git 用户信息
-
-在使用 git 前，还要先设置一下全局的 git 用户信息。命令如下：（github 上的昵称或邮箱）（选择一个就可以了，推荐邮箱）
+在使用 git 前，还要先设置一下全局的 git 用户信息。命令如下：（github 上的昵称或邮箱）（选择一个就可以了，推荐邮箱，因为名字可能随时改）
 
 ```shell
-git config --global user.name "MuAnnan"
+git config --global user.name "muannan"
 git config --global user.email "aikn0806@gmail.com"
 ```
 
@@ -61,15 +55,13 @@ fatal: unable to auto-detect email address (got 'yourusername@yourhostname')
 
 
 
-
-
 # 配置 SSH 密钥
 
 想要无痛向 github 远程仓库上传和拉取仓库，而不需要过多的身份验证，配置 SSH 密钥是一个不错的方式。
 
-步骤如下：
+PIPELINE: 
 
-1. 使用以下命令创建 SSH 私钥：
+1. 创建 SSH 私钥：
 
    ```shell
    ssh-keygen -t rsa -b 4096 -C "your_email@example.com"  # 其中，邮箱为 Github 对应的邮箱
@@ -81,16 +73,16 @@ fatal: unable to auto-detect email address (got 'yourusername@yourhostname')
    - 设置的密码（不需要设置，直接按 Enter）
    - 再次确认密码（继续按 Enter）
 
-2. 使用以下命令查看并复制 SSH 私钥内容：
+2. 查看并复制 SSH 私钥内容：
 
    ```shell
-   cat ~/.ssh/id_rsa.pub  # macOS（Windows 用 type 命令）
+   cat ~/.ssh/id_rsa.pub  # macOS（Windows 用 type 指令）
    ```
 
 3. 在 github 中点击头像，选择 Settings -> SSH and GPS keys -> New SSH Key，填写或选择：
 
    - Title：是指该密钥来自哪里
-   - Key type: 选择 Authentication Key 即可
+   - Key type: 选择 Authentication Key
    - Key: 粘贴刚才复制的 SSH 密钥
 
 4. 添加 SSH 密钥后，可以再次尝试 git push。首次 push 还会遇到类似于下面的错误：
@@ -105,6 +97,26 @@ fatal: unable to auto-detect email address (got 'yourusername@yourhostname')
    这是因为 GitHub 的 SSH 服务器公钥还没有被记录在本地机器上，输入 yes 后，它会把 GitHub 的公钥添加到的 ~/.ssh/known_hosts 文件中。
 
 
+
+
+
+# 拉取一个仓库 & 后续维护
+
+使用 `git clone` 命令拉取仓库：
+
+```shell
+git clone git@github.com:GalaxyGeneralRobotics/g1vla_ctrl.git
+git clone -b g1vla_ctrl_v3 --single-branch git@github.com:GalaxyGeneralRobotics/g1vla_ctrl.git  # 拉取特定分支
+```
+
+后续维护：
+
+```shell
+git status  #  看看改了啥
+git add -A  # 将全部改动加入暂存区  # 或者只加部分文件：git add path/to/file
+git commit -m "描述你做了什么修改"  # 提交一次（写提交说明）
+git push -u origin g1vla_ctrl_v3   # 推送到远程分支（这里是 g1vla_ctrl_v3）；之后再推送，直接用 git push 即可
+```
 
 
 
@@ -199,3 +211,4 @@ git reset --hard origin/main
 要事先与远程仓库保持一致，不然这里有改动，远程仓库也有改动，就乱了。
 
 要先 `git pull origin main`，然后再使用 git add . 去修改
+
